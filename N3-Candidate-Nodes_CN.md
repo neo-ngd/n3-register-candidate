@@ -4,7 +4,7 @@
 
 |          | 最低配置                                               | 推荐配置                                               |
 | -------- | ------------------------------------------------------ | ------------------------------------------------------ |
-| 操作系统 | Windows 10<br />Centos7.4及以上<br />ubuntu16.04\18.04 | Windows 10<br />Centos7.4及以上<br />ubuntu16.04\18.04 |
+| 操作系统 | Windows 10<br />Centos7.4及以上<br />ubuntu16.04\18.04\20.04 | Windows 10<br />Centos7.4及以上<br />ubuntu16.04\18.04\20.04 |
 | CPU      | 2核                                                    | 4核                                                    |
 | 内存     | 8G                                                     | 16G                                                    |
 | 磁盘     | 64G固态                                                | 256G固态                                               |
@@ -16,7 +16,7 @@
 
 ### 环境准备
 
-1. 安装 Neo 节点的运行环境 [.NET Core Runtime](https://www.microsoft.com/net/download/core#/runtime) ，3.0 或以上版本。
+1. 安装 Neo 节点的运行环境 [.NET Core Runtime](https://www.microsoft.com/net/download/core#/runtime) ，5.0 或以上版本。
 
 2. 特别地，对于 Linux 系统，需要安装 `LevelDB` 和 `SQLite3` 开发包。
 
@@ -31,9 +31,9 @@
    ```
    sudo yum install sqlite-devel
    sudo yum install libunwind-devel
-   sudo wget https://download-ib01.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-   sudo rpm -ivh epel-release-6-8.noarch.rpm
-   sudo yum install leveldb-devel
+   sudo wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+   sudo yum -y install epel-release-latest-7.noarch.rpm
+   sudo yum  -y install leveldb-devel libunwind-devel libsqlite3x-devel sqlite3*
    ```
 
 ### 配置节点
@@ -46,7 +46,7 @@ Neo-cli 在执行过程中会访问其根目录下的配置文件 `config.json` 
 {
   "ApplicationConfiguration": {
     "Logger": {
-      "Path": "Logs_{0}",
+      "Path": "Logs",
       "ConsoleOutput": false,
       "Active": false
     },
@@ -59,16 +59,20 @@ Neo-cli 在执行过程中会访问其根目录下的配置文件 `config.json` 
       "WsPort": 20334
     },
     "UnlockWallet": {
-      "Path": "admint.json",
-      "Password": "1",
-      "IsActive": true
+      "Path": "",
+      "Password": "",
+      "IsActive": false
     },
     "PluginURL": "https://github.com/neo-project/neo-modules/releases/download/v{1}/{0}.zip"
   },
   "ProtocolConfiguration": {
-    "Network": 1951352142,
+    "Network": 877933390,
+    "AddressVersion": 53,
     "MillisecondsPerBlock": 15000,
+    "MaxTransactionsPerBlock": 512,
+    "MemoryPoolMaxTransactions": 50000,
     "MaxTraceableBlocks": 2102400,
+    "InitialGasDistribution": 5200000000000000,
     "ValidatorsCount": 7,
     "StandbyCommittee": [
       "023e9b32ea89b94d066e649b124fd50e396ee91369e8e2a6ae1b11c170d022256d",
@@ -77,14 +81,28 @@ Neo-cli 在执行过程中会访问其根目录下的配置文件 `config.json` 
       "03408dcd416396f64783ac587ea1e1593c57d9fea880c8a6a1920e92a259477806",
       "02a7834be9b32e2981d157cb5bbd3acb42cfd11ea5c3b10224d7a44e98c5910f1b",
       "0214baf0ceea3a66f17e7e1e839ea25fd8bed6cd82e6bb6e68250189065f44ff01",
-      "030205e9cefaea5a1dfc580af20c8d5aa2468bb0148f1a5e4605fc622c80e604ba"
+      "030205e9cefaea5a1dfc580af20c8d5aa2468bb0148f1a5e4605fc622c80e604ba",
+      "025831cee3708e87d78211bec0d1bfee9f4c85ae784762f042e7f31c0d40c329b8",
+      "02cf9dc6e85d581480d91e88e8cbeaa0c153a046e89ded08b4cefd851e1d7325b5",
+      "03840415b0a0fcf066bcc3dc92d8349ebd33a6ab1402ef649bae00e5d9f5840828",
+      "026328aae34f149853430f526ecaa9cf9c8d78a4ea82d08bdf63dd03c4d0693be6",
+      "02c69a8d084ee7319cfecf5161ff257aa2d1f53e79bf6c6f164cff5d94675c38b3",
+      "0207da870cedb777fceff948641021714ec815110ca111ccc7a54c168e065bda70",
+      "035056669864feea401d8c31e447fb82dd29f342a9476cfd449584ce2a6165e4d7",
+      "0370c75c54445565df62cfe2e76fbec4ba00d1298867972213530cae6d418da636",
+      "03957af9e77282ae3263544b7b2458903624adc3f5dee303957cb6570524a5f254",
+      "03d84d22b8753cf225d263a3a782a4e16ca72ef323cfde04977c74f14873ab1e4c",
+      "02147c1b1d5728e1954958daff2f88ee2fa50a06890a8a9db3fa9e972b66ae559f",
+      "03c609bea5a4825908027e4ab217e7efc06e311f19ecad9d417089f14927a173d5",
+      "0231edee3978d46c335e851c76059166eb8878516f459e085c0dd092f0f1d51c21",
+      "03184b018d6b2bc093e535519732b3fd3f7551c8cffaf4621dd5a0b89482ca66c9"
     ],
     "SeedList": [
-      "seed1t.neo.org:20333",
-      "seed2t.neo.org:20333",
-      "seed3t.neo.org:20333",
-      "seed4t.neo.org:20333",
-      "seed5t.neo.org:20333"
+      "seed1t4.neo.org:20333",
+      "seed2t4.neo.org:20333",
+      "seed3t4.neo.org:20333",
+      "seed4t4.neo.org:20333",
+      "seed5t4.neo.org:20333"
     ]
   }
 }
@@ -123,6 +141,43 @@ Neo-cli 在执行过程中会访问其根目录下的配置文件 `config.json` 
   1. `Network`
 
      网络 ID，主网、测试网、各个私链等都有不同的ID
+       
+  2. `AddressVersion`
+
+     地址版本号，主网、测试网均采用53
+     
+  3. `MillisecondsPerBlock`
+
+     出块时间，默认15秒
+
+  4. `MaxTransactionsPerBlock`
+
+     区块最大交易数量，默认值为最大512个交易
+     
+  5. `MemoryPoolMaxTransactions`
+
+     内存池最大交易数，默认值为最大50000个交易 
+
+  6. `MaxTraceableBlocks`
+
+     查询区块信息支持的最大区块数，默认值为最大2102400
+     
+  7. `InitialGasDistribution`
+
+     初始GAS发行量，初始将发行5200万 
+     
+  8. `ValidatorsCount`
+
+     共识成员个数，主网、测试网均为7节点共识 
+ 
+   9. `StandbyCommittee`
+
+     委员会配置，主网、测试网分别有不同的委员会配置
+     
+   10. `SeedList`
+ 
+     种子节点列表，在初始启动neo-cli时用于连接种子节点
+     
 
 ### 安装插件
 
@@ -160,7 +215,7 @@ Neo-cli 在执行过程中会访问其根目录下的配置文件 `config.json` 
     "PluginConfiguration": {
       "Servers": [
         {
-          "Network": 5195086,
+          "Network": 877933390,
           "BindAddress": "127.0.0.1",
           "Port": 20332,
           "SslCert": "",
@@ -195,7 +250,7 @@ Neo-cli 在执行过程中会访问其根目录下的配置文件 `config.json` 
   {
     "PluginConfiguration": {
       "Path": "ApplicationLogs_{0}",
-      "Network": 5195086
+      "Network": 877933390
     }
   }
   ```
@@ -213,7 +268,7 @@ Neo-cli 在执行过程中会访问其根目录下的配置文件 `config.json` 
       "TrackHistory": true,
       "RecordNullAddressHistory": false,
       "MaxResults": 1000,
-      "Network": 5195086
+      "Network": 877933390
     }
   }
   ```
@@ -237,7 +292,7 @@ dotnet neo-cli.dll
 neo-cli.exe
 ```
 
-**Linux (ubuntu 16.04/18.04)** :
+**Linux (ubuntu 16.04/18.04/20.04)** :
 
 ```
 ./neo-cli
